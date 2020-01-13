@@ -51,7 +51,7 @@ overwrite settings from configuration files. These are the class parameters:
 
 You can store the `user_name`, `user_id` and `slack_token` in your user config file.
 To do so, create `~/.slack-clusterbot` with the following content:
-```cfg
+```ini
 [SLACK]
 # Authentication token
 #token = ...
