@@ -44,9 +44,9 @@ overwrite settings from configuration files. These are the class parameters:
   it). If both, `user_id` and `user_name` are given, the `user_id` is used.
 - **slack_token**: The *Bot User OAuth Access Token* used to grant permissions
   to interact with Slack.
-- *system_config_file*: Location of the system config file. Default is
+- **system_config_file**: Location of the system config file. Default is
   `/etc/slack-clusterbot`.
-- *user_config_file*: Location of the user config file. Default is
+- **user_config_file**: Location of the user config file. Default is
   `~/.slack-clusterbot`.
 
 You can store the `user_name`, `user_id` and `slack_token` in your user config file.
