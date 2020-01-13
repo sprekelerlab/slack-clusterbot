@@ -5,7 +5,7 @@ This is a Slack bot that sends messages from your Python scripts to Slack.
 If you want to use ClusterBot on the Sprekelerlab cluster to
 communicate with the Sprekelerlab Slack, follow
 the instruction on this page. If you want to install the ClusterBot on a
-different computer, follow [these instructions].
+different computer, follow [these instructions](https://github.com/sprekelerlab/slack-clusterbot/wiki/Installation).
 
 ### Install Python package
 Install this Python package in the Python environment you want to use it
@@ -13,7 +13,7 @@ Install this Python package in the Python environment you want to use it
   ```
   pip install git+https://github.com/sprekelerlab/slack-clusterbot.git@master
   ```
-For communication, you need an authentication token. This toke is stored on
+For communication, you need an authentication token. This token is stored on
 the cluster under `/etc/slack-clusterbot` and all members of the cognition
 group have read access. This token will be automatically loaded by the Python
 package.
@@ -44,15 +44,14 @@ overwrite settings from configuration files. These are the class parameters:
   it). If both, `user_id` and `user_name` are given, the `user_id` is used.
 - **slack_token**: The *Bot User OAuth Access Token* used to grant permissions
   to interact with Slack.
-- *system_config_file*: Location of the system config file. Default is
+- **system_config_file**: Location of the system config file. Default is
   `/etc/slack-clusterbot`.
-- *user_config_file*: Location of the user config file. Default is
+- **user_config_file**: Location of the user config file. Default is
   `~/.slack-clusterbot`.
 
-To store the `user_name` or `user_id` in your user config file, create
-`~/.slack-clusterbot` with the following content:
-The config file has the following structure:
-```cfg
+You can store the `user_name`, `user_id` and `slack_token` in your user config file.
+To do so, create `~/.slack-clusterbot` with the following content:
+```ini
 [SLACK]
 # Authentication token
 #token = ...
@@ -62,3 +61,11 @@ The config file has the following structure:
 name = Denis Alevi
 #id = ...
 ```
+Now you can use `ClusterBot` without arguments:
+```python
+from clusterbot import ClusterBot
+
+cb = ClusterBot()
+cb.print("Hello world!")
+```
+This will use the username from the config file and send a message to Denis Alevi.
