@@ -17,21 +17,29 @@ class ClusterBot(object):
     With ClusterBot you can send messages from your Python scripts to Slack.
     """
 
-    def __init__(self, user_id=None, user_name=None, slack_token=None,
+    def __init__(self, user_name=None, user_id=None, slack_token=None,
                  user_config_file='~/.slack-clusterbot',
                  system_config_file='/etc/slack-clusterbot'):
         """
-
         Parameters
         ----------
-        user_id
-        user_name
-        slack_token
-        user_config_file
-        system_config_file
-
-        Returns
-        -------
+        user_name : str
+            Who to send the messages to. This needs to be the full name used in
+            your Slack profile.
+        user_id : str
+            Who to send the message to. This is your Slack user ID, which can
+            be found in your profile settings. Your ID does not change while
+            your username can (if you change it). If both, user_id and
+            user_name are given, the user_id is used.
+        slack_token : str
+            The ``Bot User OAuth Access Token`` used to grant permissions to
+            interact with Slack.
+        user_config_file : str
+            Location of the system config file. Default is
+            ``/etc/slack-clusterbot``.
+        system_config_file : str
+            Location of the user config file. Default is
+            ``~/.slack-clusterbot``.
         """
         self.user_id = user_id
         self.user_name = user_name
@@ -131,6 +139,10 @@ class ClusterBot(object):
 
     def _check_user_exists(self):
 
+        if self.client is None:
+            raise RuntimeError("Missing the webclient. Call _connect_to_slack() "
+                               "first.")
+
         # get list of users in Slack team
         users_list = self.client.users_list()
 
@@ -165,10 +177,17 @@ class ClusterBot(object):
                                      f"find your ID in your Slack profile settings.")
 
     def _open_conversation(self):
+        if self.client is None:
+            raise RuntimeError("Missing the webclient. Call _connect_to_slack() "
+                               "first.")
+
         self.conversation = self.client.conversations_open(users=self.user_id)
 
 
     def print(self, message):
+        """
+        Send ``message`` to Slack via ClusterBot.
+        """
 
         if self.conversation is None:
             self._open_conversation()
