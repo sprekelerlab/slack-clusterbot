@@ -5,7 +5,7 @@ This is a Slack bot that sends messages from your Python scripts to Slack.
 If you want to use ClusterBot on the Sprekelerlab cluster to
 communicate with the Sprekelerlab Slack, follow
 the instruction on this page. If you want to install the ClusterBot on a
-different computer, follow [these instructions](wiki/Installation).
+different computer, follow [these instructions](https://github.com/sprekelerlab/slack-clusterbot/wiki/Installation).
 
 ### Install Python package
 Install this Python package in the Python environment you want to use it
