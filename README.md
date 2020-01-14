@@ -25,7 +25,7 @@ Alevi on Slack.
 from clusterbot import ClusterBot
 
 cb = ClusterBot(user_name="Denis Alevi")
-cb.print("Hello world!")
+cb.send("Hello world!")
 ```
 For authentication, the cluster uses a token that is stored in
 `/etc/slack-clusterbot` that all members of the cognition group have read
@@ -66,6 +66,6 @@ Now you can use `ClusterBot` without arguments:
 from clusterbot import ClusterBot
 
 cb = ClusterBot()
-cb.print("Hello world!")
+cb.send("Hello world!")
 ```
 This will use the username from the config file and send a message to Denis Alevi.

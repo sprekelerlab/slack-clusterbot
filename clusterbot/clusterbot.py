@@ -184,7 +184,7 @@ class ClusterBot(object):
         self.conversation = self.client.conversations_open(users=self.user_id)
 
 
-    def print(self, message):
+    def send(self, message):
         """
         Send ``message`` to Slack via ClusterBot.
         """
