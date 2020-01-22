@@ -211,16 +211,12 @@ class ClusterBot(object):
                 channel=self.conversation['channel']['id'],
                 text=message
             )
-            print("Send new message:", message)
         else:
             response = self.client.chat_postMessage(
                 channel=self.conversation['channel']['id'],
                 text=message,
                 thread_ts=reply_to
             )
-            print("Send reply:", message)
-
-        print("Response:", response)
 
         return response.data['ts']
 
