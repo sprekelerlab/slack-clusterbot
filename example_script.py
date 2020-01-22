@@ -13,7 +13,7 @@ logger.setLevel(logging.INFO)
 
 # example code to send Denis Alevi a message
 cb = ClusterBot(user_name='Denis Alevi')
-cb.send("Starting example script.")
-cb.send("Waiting for 5s.")
+message_id = cb.send("Starting example script.")
+cb.reply(message_id, "Waiting for 5s.")
 time.sleep(5)
-cb.send("5s have passed. Closing. Thank you for flying with ClusterBot! :tada:")
+cb.reply(message_id, "5s have passed. Closing. Thank you for flying with ClusterBot! :tada:")

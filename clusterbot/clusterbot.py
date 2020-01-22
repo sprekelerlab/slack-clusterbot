@@ -184,15 +184,62 @@ class ClusterBot(object):
         self.conversation = self.client.conversations_open(users=self.user_id)
 
 
-    def send(self, message):
+    def send(self, message, reply_to=None):
         """
         Send ``message`` to Slack via ClusterBot.
+
+        Parameters
+        ----------
+        message : str
+            Message to send.
+        reply_to : str, optional
+            The ID (``ts`` value) of the message to reply to. This creates a
+            thread (if not already created) and replies there. The ID
+
+        Returns
+        -------
+        ts : str
+            ID of sent message.
         """
 
         if self.conversation is None:
             self._open_conversation()
 
-        self.client.chat_postMessage(
-            channel=self.conversation['channel']['id'],
-            text=message
-        )
+        # TODO test if passing ts=None works as well
+        if reply_to is None:
+            response = self.client.chat_postMessage(
+                channel=self.conversation['channel']['id'],
+                text=message
+            )
+            print("Send new message:", message)
+        else:
+            response = self.client.chat_postMessage(
+                channel=self.conversation['channel']['id'],
+                text=message,
+                thread_ts=reply_to
+            )
+            print("Send reply:", message)
+
+        print("Response:", response)
+
+        return response.data['ts']
+
+
+    def reply(self, ts, message):
+        """
+        Reply to a message on Slack via ClusterBot.
+
+        Parameters
+        ----------
+        ts : str
+            The ID of the message to reply to. Returned by ``send()``.
+        message : str
+            Message to send.
+
+        Returns
+        -------
+        ts : str
+            ID of sent message.
+        """
+
+        return self.send(message, reply_to=ts)
