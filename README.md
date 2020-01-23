@@ -13,10 +13,6 @@ Install this Python package in the Python environment you want to use it
   ```
   pip install git+https://github.com/sprekelerlab/slack-clusterbot.git@master
   ```
-For communication, you need an authentication token. This token is stored on
-the cluster under `/etc/slack-clusterbot` and all members of the cognition
-group have read access. This token will be automatically loaded by the Python
-package.
 
 ## Usage
 With the following snippet, `ClusterBot` will send "Hello world!" to Denis
@@ -68,4 +64,4 @@ from clusterbot import ClusterBot
 cb = ClusterBot()
 cb.send("Hello world!")
 ```
-This will use the username from the config file and send a message to Denis Alevi.
+This will use the username or ID from the config file (with the config file from above, it will send the message to Denis Alevi).
