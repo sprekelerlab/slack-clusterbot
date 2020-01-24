@@ -12,7 +12,7 @@ Install this Python package in the Python environment you want to use it in
 on the Sprekelerlab cluster. Activate the your correct conda environment (if
 you are using conda) before installing this package:
 ```
-pip install git+https://github.com/sprekelerlab/slack-clusterbot.git@master
+pip install slack-clusterbot
 ```
 
 Create the config file `~/.slack-clusterbot` on the cluster with the following
