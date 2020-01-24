@@ -1,0 +1,25 @@
+# This is a config template.
+#
+# It can be stored as user config file under ~/.slack-clusterbot and / or
+# system-wide. By default, clusterbot searches the default location
+# /etc/slack-clusterbot for the system config file. This can be changed by
+# setting the ``system_config_file`` option in the user config file or passing
+# it as parameter at ``ClusterBot`` initialization.
+#
+# Config options passed as ``ClusterBot`` initalization always overwrite
+# options from the user config file which overwrites options from the system
+# config file.
+
+[BOT]
+# Bot User OAuth Access Token
+#token = ...
+
+# Custom system config file (only used in user config file)
+#system_config_file = ...
+
+
+[USER]
+# Default user information (if `id` and `name` are given, `id` is used)
+#id = ...
+#name = ...
+

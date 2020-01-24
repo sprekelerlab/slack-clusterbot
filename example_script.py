@@ -1,19 +1,24 @@
 import time
-import logging
-from clusterbot import ClusterBot
+from clusterbot import ClusterBot, activate_logger
 
-# create logger to get library information
-logger = logging.getLogger()
-handler = logging.StreamHandler()
-formatter = logging.Formatter(
-        '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
-handler.setFormatter(formatter)
-logger.addHandler(handler)
-logger.setLevel(logging.INFO)
+# Print confirmation about sent Slack messages
+activate_logger()
+# Debug mode
+#activate_logger('DEBUG')
 
-# example code to send Denis Alevi a message
-cb = ClusterBot(user_name='Denis Alevi')
+# Send a message to the default user specified in you config files.
+cb = ClusterBot()
 message_id = cb.send("Starting example script.")
+# Reply to the default user message from above (open a ne Thread).
 cb.reply(message_id, "Waiting for 5s.")
+# Wait 5 seconds.
 time.sleep(5)
-cb.reply(message_id, "5s have passed. Closing. Thank you for flying with ClusterBot! :tada:")
+# Reply again.
+cb.reply(message_id, "5s have passed.")
+
+# Send a message to someone else (not default user)
+message_id = cb.send("Hi Denis. I started using ClusterBot :tada:",
+                     user_name="Denis Alevi")
+# Reply to that message (message_id has to belong to a message exchanged with
+# ``user_name``)
+cb.reply(message_id, "And I ran the example script!", user_name="Denis Alevi")
