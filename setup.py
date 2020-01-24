@@ -1,8 +1,11 @@
 import setuptools
 
+# read __version__ from clusterbot/version.py
+exec(open('clusterbot/version.py').read())
+
 setuptools.setup(
     name='slack-clusterbot',
-    version='dev',
+    version=__version__,
     author='Denis Alevi',
     author_email='mail@denisalevi.com',
     description="Send messages from your Python scripts to Slack.",

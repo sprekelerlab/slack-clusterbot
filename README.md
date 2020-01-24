@@ -44,9 +44,9 @@ above).
 ```python
 from clusterbot import ClusterBot
 
-cb = ClusterBot()
-cb.send("Hello world!")
-cb.send("Hello again!")
+bot = ClusterBot()
+bot.send("Hello world!")
+bot.send("Hello again!")
 ```
 
 ### Replying to a message (opening a Thread)
@@ -55,10 +55,10 @@ that the second and third message will be send as a reply to the first one.
 ```python
 from clusterbot import ClusterBot
 
-cb = ClusterBot()
-message_id = cb.send("Hello world!")
-cb.reply(message_id, "Hello again!")
-cb.reply(message_id, "Hello once more!")
+bot = ClusterBot()
+message_id = bot.send("Hello world!")
+bot.reply(message_id, "Hello again!")
+bot.reply(message_id, "Hello once more!")
 ```
 
 ### Sending a message to someone else
@@ -68,9 +68,9 @@ calls:
 ```python
 from clusterbot import ClusterBot
 
-cb = ClusterBot()
-message_id = cb.send("Hello world!", user_name='Denis Alevi')
-cb.replay(message_id, "Hello world!", user_name='Denis Alevi')
+bot = ClusterBot()
+message_id = bot.send("Hello world!", user_name='Denis Alevi')
+bot.replay(message_id, "Hello world!", user_name='Denis Alevi')
 ```
 This will send a message and a threaded reply to Denis Alevi.
 

@@ -1,3 +1,7 @@
+"""
+ClusterBot sends messages from your Python scripts to Slack.
+"""
+from .version import __version__
 import logging
 from .clusterbot import ClusterBot
 
