@@ -70,9 +70,55 @@ from clusterbot import ClusterBot
 
 bot = ClusterBot()
 message_id = bot.send("Hello world!", user_name='Denis Alevi')
-bot.replay(message_id, "Hello world!", user_name='Denis Alevi')
+bot.reply(message_id, "Hello world!", user_name='Denis Alevi')
 ```
 This will send a message and a threaded reply to Denis Alevi.
+
+### Editing a previously sent message
+You can edit previously sent messages as follows:
+
+```python
+from clusterbot import ClusterBot
+
+bot = ClusterBot()
+message_id = bot.send("Hello world!", user_name='Denis Alevi')
+bot.update(message_id, "An update!", user_name='Denis Alevi')
+```
+
+### Uploading files to a chat
+You can also send files (e.g. images, PDFs, etc) via:
+
+```python
+from clusterbot import ClusterBot
+
+bot = ClusterBot()
+message_id = bot.upload(file_name="<path_to_file>",
+                        message="Uploading Figure",
+                        user_name="Denis Alevi")
+# Or as send it as a response to a previous message
+message_id = bot.upload(file_name="<path_to_file>",
+                        message="Uploading Figure",
+                        reply_to=message_id,
+                        user_name="Denis Alevi")
+```
+
+### Progress Bars
+
+We also support simple progress bars:
+
+```python
+from clusterbot import ClusterBot
+
+bot = ClusterBot()
+# Initialize a progress bar that counts up to 10
+bot.init_pbar(max_value=10,
+              user_name="Denis Alevi")
+# Update the progress bar by an increment of 1
+bot.update_pbar(user_name="Denis Alevi")
+# Or directly set the value to a value
+bot.update_pbar(current_value=5,
+                user_name="Denis Alevi")
+```
 
 ### Logging
 If you want your Python script to inform you about sent Slack messages, you
