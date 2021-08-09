@@ -120,6 +120,18 @@ bot.update_pbar(current_value=5,
                 user_name="Denis Alevi")
 ```
 
+### Deleting a Message
+
+You can also delete a previously send message:
+
+```python
+from clusterbot import ClusterBot
+
+bot = ClusterBot()
+message_id = bot.send("Hello world!", user_name='Denis Alevi')
+bot.delete(message_id, user_name='Denis Alevi')
+```
+
 ### Logging
 If you want your Python script to inform you about sent Slack messages, you
 can activate the logger:

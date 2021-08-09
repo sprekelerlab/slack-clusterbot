@@ -388,6 +388,38 @@ class ClusterBot(object):
                                     text=message,)
         logger.info(f"Updated message to '{user_name}' (ID: '{user_id}'): '{message}'")
 
+    def delete(self, delete_id: str, user_name=None, user_id=None):
+        """
+        Upload a file to slack.
+
+        Parameters
+        ----------
+        delete_id : str
+            Message to delete.
+        kwargs : dict, optional
+            Keyword arguments passed to ``send()``. These are ``user_name`` and
+            ``user_id`` (optional). See ``send()`` docstring for details.
+
+        Returns
+        -------
+        ts : str
+            ID of sent message.
+        """
+        if user_name is None and user_id is None:
+            # use default user, ID already check in __init__
+            user_name = self.default_user['name']
+            user_id = self.default_user['id']
+
+        if not user_id in self.conversations:
+            # get user ID (and check it is valid)
+            user_id, user_name = self._verify_user(user_name=user_name, user_id=user_id)
+            self._open_conversation(user_id)
+
+        channel = self.conversations[user_id]['channel']['id']
+        _ = self.client.chat_delete(channel=channel,
+                                    ts=delete_id,)
+        logger.info(f"Deleted message to '{user_name}' (ID: '{user_id}')")
+
     def init_pbar(self, max_value: int, ts=None, **kwargs):
         """
         Initialize a progress bar.
