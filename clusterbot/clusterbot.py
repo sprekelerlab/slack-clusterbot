@@ -307,11 +307,16 @@ class ClusterBot(object):
 
         Parameters
         ----------
+        file_name : str
+            Path to file that will be uploaded to slack.
         ts : str
             The ID of the message to reply to. Returned by ``send()`` or
             ``reply()``.
         message : str
             Message to send.
+        reply_to : str, optional
+            The ID (``ts`` value) of the message to reply to. This creates a
+            thread (if not already created) and replies there. The ID
         kwargs : dict, optional
             Keyword arguments passed to ``send()``. These are ``user_name`` and
             ``user_id`` (optional). See ``send()`` docstring for details.
@@ -346,3 +351,38 @@ class ClusterBot(object):
         f_id = response.data["file"]["ims"][0]
         m_id = response.data["file"]["shares"]["private"][f_id][0]["ts"]
         return m_id
+
+    def edit(self, edit_id: str, message: str, user_name=None, user_id=None):
+        """
+        Upload a file to slack.
+
+        Parameters
+        ----------
+        message : str
+            Message to replace old one with.
+        edit_to : str
+            The ID (``ts`` value) of the message to edit.
+        kwargs : dict, optional
+            Keyword arguments passed to ``send()``. These are ``user_name`` and
+            ``user_id`` (optional). See ``send()`` docstring for details.
+
+        Returns
+        -------
+        ts : str
+            ID of sent message.
+        """
+        if user_name is None and user_id is None:
+            # use default user, ID already check in __init__
+            user_name = self.default_user['name']
+            user_id = self.default_user['id']
+
+        if not user_id in self.conversations:
+            # get user ID (and check it is valid)
+            user_id, user_name = self._verify_user(user_name=user_name, user_id=user_id)
+            self._open_conversation(user_id)
+
+        channel = self.conversations[user_id]['channel']['id']
+        response = self.client.chat_update(channel=channel,
+                                           ts=edit_id,
+                                           text=message,)
+        logger.info(f"Updated message to '{user_name}' (ID: '{user_id}'): '{message}'")
