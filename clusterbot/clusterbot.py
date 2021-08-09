@@ -6,6 +6,7 @@ import os
 import logging
 import configparser
 import slack
+from .progress_bar import ProgressBar
 
 
 logger = logging.getLogger(__name__)
@@ -352,7 +353,7 @@ class ClusterBot(object):
         m_id = response.data["file"]["shares"]["private"][f_id][0]["ts"]
         return m_id
 
-    def edit(self, edit_id: str, message: str, user_name=None, user_id=None):
+    def update(self, edit_id: str, message: str, user_name=None, user_id=None):
         """
         Upload a file to slack.
 
@@ -382,7 +383,39 @@ class ClusterBot(object):
             self._open_conversation(user_id)
 
         channel = self.conversations[user_id]['channel']['id']
-        response = self.client.chat_update(channel=channel,
-                                           ts=edit_id,
-                                           text=message,)
+        _ = self.client.chat_update(channel=channel,
+                                    ts=edit_id,
+                                    text=message,)
         logger.info(f"Updated message to '{user_name}' (ID: '{user_id}'): '{message}'")
+
+    def init_pbar(self, max_value: int, ts=None, **kwargs):
+        """
+        Initialize a progress bar.
+
+        Parameters
+        ----------
+        max_value : int
+            Maximal value that the progress bar counter can take.
+        kwargs : dict, optional
+            Keyword arguments passed to ``send()``. These are ``user_name`` and
+            ``user_id`` (optional). See ``send()`` docstring for details.
+        """
+        # TODO: Allow for multiple pbars running at the same time
+        self.pbar = ProgressBar(max_value)
+        message = self.pbar.init()
+        self.pbar_id = self.send(message, reply_to=ts, **kwargs)
+
+    def update_pbar(self, current_value=None, **kwargs):
+        """
+        Update an existing progress bar.
+
+        Parameters
+        ----------
+        update_step : int
+            Value by which to increment the progress bar.
+        kwargs : dict, optional
+            Keyword arguments passed to ``send()``. These are ``user_name`` and
+            ``user_id`` (optional). See ``send()`` docstring for details.
+        """
+        message_new = self.pbar.update(current_value)
+        self.update(self.pbar_id, message_new, **kwargs)
