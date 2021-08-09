@@ -6,7 +6,6 @@ import os
 import logging
 import configparser
 import slack
-from slack.errors import SlackApiError
 
 
 logger = logging.getLogger(__name__)
@@ -301,3 +300,49 @@ class ClusterBot(object):
         """
 
         return self.send(message, reply_to=ts, **kwargs)
+
+    def upload(self, file_name, message, reply_to=None, user_name=None, user_id=None):
+        """
+        Upload a file to slack.
+
+        Parameters
+        ----------
+        ts : str
+            The ID of the message to reply to. Returned by ``send()`` or
+            ``reply()``.
+        message : str
+            Message to send.
+        kwargs : dict, optional
+            Keyword arguments passed to ``send()``. These are ``user_name`` and
+            ``user_id`` (optional). See ``send()`` docstring for details.
+
+        Returns
+        -------
+        ts : str
+            ID of sent message.
+        """
+        if user_name is None and user_id is None:
+            # use default user, ID already check in __init__
+            user_name = self.default_user['name']
+            user_id = self.default_user['id']
+
+        if not user_id in self.conversations:
+            # get user ID (and check it is valid)
+            user_id, user_name = self._verify_user(user_name=user_name, user_id=user_id)
+            self._open_conversation(user_id)
+
+        channel = self.conversations[user_id]['channel']['id']
+        if reply_to is None:
+            response = self.client.files_upload(channels=channel,
+                                                initial_comment=message,
+                                                file=file_name,)
+            logger.info(f"Sent figure to '{user_name}' (ID: '{user_id}'): '{message}'")
+        else:
+            response = self.client.files_upload(channels=channel,
+                                                initial_comment=message,
+                                                file=file_name,
+                                                thread_ts=reply_to,)
+            logger.info(f"Sent figure to '{user_name}' (ID: '{user_id}'): '{message}'")
+        f_id = response.data["file"]["ims"][0]
+        m_id = response.data["file"]["shares"]["private"][f_id][0]["ts"]
+        return m_id
