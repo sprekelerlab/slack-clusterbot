@@ -8,8 +8,7 @@ from .clusterbot import ClusterBot
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 
-
-def activate_logger(loglevel='INFO'):
+def activate_logger(loglevel: str = 'INFO') -> None:
     """
     Print log messages during executions.
 
@@ -27,3 +26,6 @@ def activate_logger(loglevel='INFO'):
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.setLevel(getattr(logging, loglevel))
+
+
+__all__ = ["__version__", "ClusterBot", "activate_logger"]

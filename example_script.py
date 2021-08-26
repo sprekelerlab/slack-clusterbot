@@ -22,3 +22,20 @@ message_id = bot.send("Hi Denis. I started using ClusterBot :tada:",
 # Reply to that message (message_id has to belong to a message exchanged with
 # ``user_name``)
 bot.reply(message_id, "And I ran the example script!", user_name="Denis Alevi")
+
+# Upload a file to your slack chat
+message_id = bot.upload(file_name="Readme.md",
+                        message="Upload of Readme.md",
+                        user_name="Denis Alevi")
+
+# Update/edit a previously send message
+message_id = bot.reply(message_id, "An answer to this file",
+                       user_name="Denis Alevi")
+bot.update(message_id, "An updated answer to this figure.",
+           user_name="Denis Alevi")
+
+# Initialize and update a progress bar
+bot.init_pbar(10)
+for i in range(10):
+    message_new = bot.update_pbar()
+    time.sleep(1)
