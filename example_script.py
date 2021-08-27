@@ -24,7 +24,7 @@ message_id = bot.send("Hi Denis. I started using ClusterBot :tada:",
 bot.reply(message_id, "And I ran the example script!", user_name="Denis Alevi")
 
 # Upload a file to your slack chat
-message_id = bot.upload(file_name="Readme.md",
+message_id = bot.upload(file_name="README.md",
                         message="Upload of Readme.md",
                         user_name="Denis Alevi")
 
