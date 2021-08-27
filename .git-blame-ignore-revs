@@ -1,0 +1,8 @@
+# This file collects all bulk commits, which should not appear when using `git blame`.
+# To configure git to ignore these commits during `git blame`, set:
+#
+# 	git config blame.ignoreRevsFile .git-blame-ignore-revs
+#
+
+# Format code with `black`
+a0be498ed9e98442fe9839907fe52c654f97e335
