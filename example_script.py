@@ -26,7 +26,7 @@ bot.reply(message_id, "And I ran the example script!", user_name="Denis Alevi")
 
 # Upload a file to your slack chat
 message_id = bot.upload(
-    file_name="README.md", message="Upload of Readme.md", user_name="Denis Alevi"
+    file_name="README.md", message="Upload of README.md", user_name="Denis Alevi"
 )
 
 # Update/edit a previously send message

@@ -6,8 +6,15 @@ import os
 # Modified from https://github.com/shackenberg/pbar.py/blob/master/pbar.py
 class ProgressBar(object):
     def __init__(
-        self, max_value, title=None, start_state=0, max_refreshrate=0.3, zero_index=True
+        self,
+        max_value,
+        title=None,
+        start_state=0,
+        max_refreshrate=0.3,
+        zero_index=True,
+        width=None,
     ):
+        self.width = width
         self.max_value = max_value
         self.start_time = time()
         self.state = start_state
@@ -23,11 +30,14 @@ class ProgressBar(object):
         return self.print_pbar(output_string)
 
     def determine_length_pbar(self):
-        try:
-            return self.get_width_of_terminal()
-        except:
-            rule_of_thumb_standard_value = 80
-            return rule_of_thumb_standard_value
+        if self.width is not None:
+            return self.width
+        else:
+            try:
+                return self.get_width_of_terminal()
+            except:
+                rule_of_thumb_standard_value = 80
+                return rule_of_thumb_standard_value
 
     def get_width_of_terminal(self):
         _, ncolumns = os.popen("stty size", "r").read().split()
@@ -64,15 +74,6 @@ class ProgressBar(object):
     def time_div_to_short_str(self, time_div):
         return str(timedelta(seconds=round(time_div)))
 
-    def compute_bar_length(self, overhead, progress):
-        max_bar_length = self.length - overhead
-        return progress * max_bar_length / 100
-
-    def compute_filling_length(self, overhead, progress):
-        max_bar_length = self.length - overhead
-        bar_length = progress * max_bar_length / 100
-        return max_bar_length - bar_length
-
     def computed_estimate_time_left(self, complete_elapsed_time):
         estimated_time_left = complete_elapsed_time * (
             self.max_value / float(self.state) - 1
@@ -83,47 +84,59 @@ class ProgressBar(object):
         self.length = self.determine_length_pbar()
         progress = int(round(self.state * 100.0 / self.max_value))
         complete_elapsed_time = current_time - self.start_time
-        complete_elapsed_time_pretty = self.time_div_to_short_str(complete_elapsed_time)
+        # time format has always 7 letters: `0:00:00`
+        time_len = len("0:00:00")
+        complete_elapsed_time_pretty = (
+            f"{self.time_div_to_short_str(complete_elapsed_time):>{time_len}}"
+        )
 
         if (complete_elapsed_time > 3) & (self.state > 0):
             estimated_time_left = self.computed_estimate_time_left(
                 complete_elapsed_time
             )
-            estimated_time_left_pretty = self.time_div_to_short_str(estimated_time_left)
-            estimated_time_left_pretty_formatted = (
-                " - " + estimated_time_left_pretty + " remaining"
+            estimated_time_left_pretty = (
+                f" - {self.time_div_to_short_str(estimated_time_left)} remaining"
             )
         else:
-            estimated_time_left_pretty_formatted = ""
-        progress_str = " " + str(progress) + "% in "
+            estimated_time_left_pretty = ""
+
+        # remaining time format has always 20 letters: ` - 0:00:00 remaining"
+        remaining_len = len(" - 0:00:00 remaining")
+        estimated_time_left_pretty_formatted = (
+            f"{estimated_time_left_pretty:>{remaining_len}}"
+        )
+
+        # progress string has max 3 digits (100%)
+        progress_str = f" {progress:3d}% in "
+
         len_of_brackets = 2
+        len_backticks = 2
         overhead = (
             len_of_brackets
+            + len_backticks
             + len(progress_str)
             + len(complete_elapsed_time_pretty)
             + len(self.title)
             + len(estimated_time_left_pretty_formatted)
         )
-        bar_length = self.compute_bar_length(overhead, progress)
-        filling_length = self.compute_filling_length(overhead, progress)
-        progressbar_string = (
-            "[" + "#" * int(bar_length) + " " * int(filling_length) + "]"
-        )
 
-        complete_elapsed_time_pretty = str(complete_elapsed_time_pretty)
+        max_bar_length = self.length - overhead
+        bar_length = int(progress * max_bar_length / 100)
+        filled = "#" * bar_length
+        progressbar_string = f"[{filled:<{max_bar_length}}]"
 
-        if self.length == self.length:
-            carriage_return = "\r"
-        else:
-            carriage_return = "\n"
+        carriage_return = os.linesep
+        backtick = "`"
 
         ordered_output_string_fields = [
             carriage_return,
+            backtick,
             self.title,
             progressbar_string,
             progress_str,
             complete_elapsed_time_pretty,
             estimated_time_left_pretty_formatted,
+            backtick,
         ]
 
         output_string = "".join(ordered_output_string_fields)

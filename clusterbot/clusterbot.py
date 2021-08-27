@@ -283,12 +283,12 @@ class ClusterBot(object):
         # TODO test if passing ts=None works as well
         if reply_to is None:
             response = self.client.chat_postMessage(channel=channel, text=message)
-            logger.info(f"Sent message to '{user_name}' (ID: '{user_id}'): '{message}'")
+            logger.info(f"Sent message to '{user_name}' (ID: '{user_id}'): {message}")
         else:
             response = self.client.chat_postMessage(
                 channel=channel, text=message, thread_ts=reply_to
             )
-            logger.info(f"Sent reply to '{user_name}' (ID: '{user_id}'): '{message}'")
+            logger.info(f"Sent reply to '{user_name}' (ID: '{user_id}'): {message}")
 
         return response.data["ts"]
 
@@ -353,7 +353,7 @@ class ClusterBot(object):
             response = self.client.files_upload(
                 channels=channel, initial_comment=message, file=file_name,
             )
-            logger.info(f"Sent figure to '{user_name}' (ID: '{user_id}'): '{message}'")
+            logger.info(f"Sent file to '{user_name}' (ID: '{user_id}'): {message}")
         else:
             response = self.client.files_upload(
                 channels=channel,
@@ -361,7 +361,7 @@ class ClusterBot(object):
                 file=file_name,
                 thread_ts=reply_to,
             )
-            logger.info(f"Sent figure to '{user_name}' (ID: '{user_id}'): '{message}'")
+            logger.info(f"Sent file to '{user_name}' (ID: '{user_id}'): {message}")
         f_id = response.data["file"]["ims"][0]
         m_id = response.data["file"]["shares"]["private"][f_id][0]["ts"]
         return m_id
@@ -397,7 +397,7 @@ class ClusterBot(object):
 
         channel = self.conversations[user_id]["channel"]["id"]
         _ = self.client.chat_update(channel=channel, ts=edit_id, text=message,)
-        logger.info(f"Updated message to '{user_name}' (ID: '{user_id}'): '{message}'")
+        logger.info(f"Updated message to '{user_name}' (ID: '{user_id}'): {message}")
 
     def delete(self, delete_id: str, user_name=None, user_id=None):
         """
@@ -430,7 +430,7 @@ class ClusterBot(object):
         _ = self.client.chat_delete(channel=channel, ts=delete_id,)
         logger.info(f"Deleted message to '{user_name}' (ID: '{user_id}')")
 
-    def init_pbar(self, max_value: int, ts=None, **kwargs):
+    def init_pbar(self, max_value: int, width=80, ts=None, **kwargs):
         """
         Initialize a progress bar.
 
@@ -438,12 +438,14 @@ class ClusterBot(object):
         ----------
         max_value : int
             Maximal value that the progress bar counter can take.
+        width : int
+            The width of the progress bar.
         kwargs : dict, optional
             Keyword arguments passed to ``send()``. These are ``user_name`` and
             ``user_id`` (optional). See ``send()`` docstring for details.
         """
         # TODO: Allow for multiple pbars running at the same time
-        self.pbar = ProgressBar(max_value)
+        self.pbar = ProgressBar(max_value, width=width)
         message = self.pbar.init()
         self.pbar_id = self.send(message, reply_to=ts, **kwargs)
 
