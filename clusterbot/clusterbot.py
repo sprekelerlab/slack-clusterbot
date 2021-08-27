@@ -5,6 +5,7 @@ Definition of the ClusterBot class.
 import os
 import logging
 import configparser
+import urllib
 import slack
 from .progress_bar import ProgressBar
 
@@ -240,7 +241,14 @@ class ClusterBot(object):
                 "Missing the webclient. Call _connect_to_slack() " "first."
             )
 
-        self.conversations[user_id] = self.client.conversations_open(users=user_id)
+        try:
+            self.conversations[user_id] = self.client.conversations_open(users=user_id)
+        except urllib.error.URLError as error:
+            logger.error(
+                f"Failed to open a conversation with the Slack client. Message was not "
+                f"sent. Error was: {error}"
+            )
+
 
     def send(self, message, reply_to=None, user_name=None, user_id=None):
         """
