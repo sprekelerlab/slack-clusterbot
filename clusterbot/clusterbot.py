@@ -260,7 +260,7 @@ class ClusterBot(object):
             Message to send.
         reply_to : str, optional
             The ID (``ts`` value) of the message to reply to. This creates a thread (if
-            not already created) and replies there. The ID
+            not already created) and replies there.
         user_name : str, optional
             Who to send the message to. This needs to be the full name used in your
             Slack profile. If None and user_id is None, use the default user (loaded
@@ -336,7 +336,7 @@ class ClusterBot(object):
             Message to send.
         reply_to : str, optional
             The ID (``ts`` value) of the message to reply to. This creates a thread (if
-            not already created) and replies there. The ID
+            not already created) and replies there.
         kwargs : dict, optional
             Keyword arguments passed to ``send()``. These are ``user_name`` and
             ``user_id`` (optional). See ``send()`` docstring for details.

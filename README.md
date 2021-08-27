@@ -63,8 +63,8 @@ bot.reply(message_id, "Hello once more!")
 
 ### Sending a message to someone else
 You can write to someone else than specified in your config file by passing
-the ``user_name`` or ``user_id`` parameter to your ``send()`` or ``reply``
-calls:
+the ``user_name`` or ``user_id`` parameter to your any of the `ClusterBot`
+methods. Here an example for a `send` and ad `reply` call:
 ```python
 from clusterbot import ClusterBot
 
@@ -81,8 +81,8 @@ You can edit previously sent messages as follows:
 from clusterbot import ClusterBot
 
 bot = ClusterBot()
-message_id = bot.send("Hello world!", user_name='Denis Alevi')
-bot.update(message_id, "An update!", user_name='Denis Alevi')
+message_id = bot.send("Hello world!")
+bot.update(message_id, "An update!")
 ```
 
 ### Uploading files to a chat
@@ -94,15 +94,13 @@ from clusterbot import ClusterBot
 bot = ClusterBot()
 message_id = bot.upload(
     file_name="<path_to_file>",
-    message="Uploading Figure",
-    user_name="Denis Alevi"
+    message="Uploading Figure"
 )
 # Or as send it as a response to a previous message
 message_id = bot.upload(
     file_name="<path_to_file>",
     message="Uploading Figure",
-    reply_to=message_id,
-    user_name="Denis Alevi"
+    reply_to=message_id
 )
 ```
 
@@ -115,11 +113,11 @@ from clusterbot import ClusterBot
 
 bot = ClusterBot()
 # Initialize a progress bar that counts up to 10
-bot.init_pbar(max_value=10, user_name="Denis Alevi")
+bot.init_pbar(max_value=10)
 # Update the progress bar by an increment of 1
-bot.update_pbar(user_name="Denis Alevi")
+bot.update_pbar()
 # Or directly set the value to a value
-bot.update_pbar(current_value=5, user_name="Denis Alevi")
+bot.update_pbar(current_value=5)
 ```
 
 ### Deleting a Message
@@ -130,8 +128,8 @@ You can also delete a previously send message:
 from clusterbot import ClusterBot
 
 bot = ClusterBot()
-message_id = bot.send("Hello world!", user_name='Denis Alevi')
-bot.delete(message_id, user_name='Denis Alevi')
+message_id = bot.send("Hello world!")
+bot.delete(message_id)
 ```
 
 ### Logging
@@ -151,7 +149,7 @@ e.g. loaded config files etc.
 
 For authentication, the cluster uses a token that is stored in
 `/cognition/home/local/.slack-clusterbot` and that all members of the
-cognition group have read access to. This token is autmatocially used if you
+cognition group have read access to. This token is automatically used if you
 set up you use the configuration file shown above. Please do no
 distribute the token as it grants read and write access to our Slack.
 
