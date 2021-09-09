@@ -85,6 +85,18 @@ message_id = bot.send("Hello world!")
 bot.update(message_id, "An update!")
 ```
 
+### Appending to a previously sent message
+You can append to a previously sent message, which updates the message with
+new content while keeping the previously written content.
+
+```python
+from clusterbot import ClusterBot
+
+bot = ClusterBot()
+message_id = bot.send("Hello world!")
+bot.append(message_id, "This is a second line appearing below 'Hello world!'")
+```
+
 ### Uploading files to a chat
 You can also send files (e.g. images, PDFs, etc) via:
 

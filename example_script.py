@@ -27,9 +27,10 @@ bot.reply(message_id, "And I ran the example script!", user_name="Denis Alevi")
 # Upload a file to your slack chat
 message_id = bot.upload(file_name="README.md", message="Upload of README.md")
 
-# Update/edit a previously send message
+# Update or append to a previously send message
 message_id = bot.reply(message_id, "An answer to this file")
-bot.update(message_id, "An updated answer to this figure.")
+bot.update(message_id, "An updated answer to this figure, deleting the previous one.")
+bot.append(message_id, "Another update, which is appended and keeps the previous one")
 
 # Initialize and update a progress bar
 bot.init_pbar(10)
