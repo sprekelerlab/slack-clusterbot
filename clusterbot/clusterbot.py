@@ -438,7 +438,7 @@ class ClusterBot(object):
         _ = self.client.chat_delete(channel=channel, ts=delete_id,)
         logger.info(f"Deleted message to '{user_name}' (ID: '{user_id}')")
 
-    def init_pbar(self, max_value: int, width=80, ts=None, **kwargs):
+    def init_pbar(self, max_value: int, title=None, width=80, ts=None, **kwargs):
         """
         Initialize a progress bar.
 
@@ -453,7 +453,7 @@ class ClusterBot(object):
             ``user_id`` (optional). See ``send()`` docstring for details.
         """
         # TODO: Allow for multiple pbars running at the same time
-        self.pbar = ProgressBar(max_value, width=width)
+        self.pbar = ProgressBar(max_value, title=title, width=width)
         message = self.pbar.init()
         self.pbar_id = self.send(message, reply_to=ts, **kwargs)
 

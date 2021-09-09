@@ -32,7 +32,7 @@ message_id = bot.reply(message_id, "An answer to this file")
 bot.update(message_id, "An updated answer to this figure.")
 
 # Initialize and update a progress bar
-bot.init_pbar(10)
+bot.init_pbar(10, title="This is a progress bar with a title")
 for i in range(10):
     message_new = bot.update_pbar()
     time.sleep(1)

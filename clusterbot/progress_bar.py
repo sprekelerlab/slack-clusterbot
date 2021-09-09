@@ -48,7 +48,7 @@ class ProgressBar(object):
         if title is None:
             return ""
         else:
-            return title + " "
+            return title + os.linesep
 
     def update(self, current_value=None):
         if current_value is None:
@@ -116,7 +116,6 @@ class ProgressBar(object):
             + len_backticks
             + len(progress_str)
             + len(complete_elapsed_time_pretty)
-            + len(self.title)
             + len(estimated_time_left_pretty_formatted)
         )
 
@@ -125,13 +124,12 @@ class ProgressBar(object):
         filled = "#" * bar_length
         progressbar_string = f"[{filled:<{max_bar_length}}]"
 
-        carriage_return = os.linesep
         backtick = "`"
 
         ordered_output_string_fields = [
-            carriage_return,
-            backtick,
+            os.linesep,
             self.title,
+            backtick,
             progressbar_string,
             progress_str,
             complete_elapsed_time_pretty,
