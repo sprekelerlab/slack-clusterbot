@@ -82,6 +82,9 @@ class ClusterBot(object):
         self.default_user["id"] = u_id
         self.default_user["name"] = u_name
 
+        # Store sent messages to allow appending to them
+        self.stored_messages = {}
+
     def _load_configs(self):
         # Check if system config file was changed in class init or through user
         # config file. If changed in class init, it overwrites user config option.
@@ -136,7 +139,7 @@ class ClusterBot(object):
                 raise AttributeError(
                     f"No Slack token given. Ask the user who installed ClusterBot in "
                     f"your Slack workspace to give you the `Bot User OAuth Access "
-                    f"Token`. It can be found at fhttps://api.slack.com/apps. "
+                    f"Token`. It can be found at https://api.slack.com/apps. "
                     f"{exc_msg} as ``token`` option under the ``[BOT]`` section."
                 )
 
@@ -298,7 +301,9 @@ class ClusterBot(object):
             )
             logger.info(f"Sent reply to '{user_name}' (ID: '{user_id}'): {message}")
 
-        return response.data["ts"]
+        message_id = response.data["ts"]
+        self.stored_messages[message_id] = message
+        return message_id
 
     def reply(self, ts, message, **kwargs):
         """
@@ -372,6 +377,7 @@ class ClusterBot(object):
             logger.info(f"Sent file to '{user_name}' (ID: '{user_id}'): {message}")
         f_id = response.data["file"]["ims"][0]
         m_id = response.data["file"]["shares"]["private"][f_id][0]["ts"]
+        self.stored_messages[m_id] = message
         return m_id
 
     def update(self, edit_id: str, message: str, user_name=None, user_id=None):
@@ -406,6 +412,35 @@ class ClusterBot(object):
         channel = self.conversations[user_id]["channel"]["id"]
         _ = self.client.chat_update(channel=channel, ts=edit_id, text=message,)
         logger.info(f"Updated message to '{user_name}' (ID: '{user_id}'): {message}")
+        self.stored_messages[edit_id] = message
+
+    def append(self, edit_id, message, **kwargs):
+        """
+        Upload a file to slack.
+
+        Parameters
+        ----------
+        message : str
+            Message to replace old one with.
+        edit_to : str
+            The ID (``ts`` value) of the message to edit.
+        kwargs : dict, optional
+            Keyword arguments passed to ``send()``. These are ``user_name`` and
+            ``user_id`` (optional). See ``send()`` docstring for details.
+
+        Returns
+        -------
+        ts : str
+            ID of sent message.
+        """
+        if edit_id not in self.stored_messages:
+            raise RuntimeError(
+                "Can't append to message with id {edit_id}, don't have that message "
+                "stored."
+            )
+        original_message = self.stored_messages[edit_id]
+        new_message = "\n".join([original_message, message])
+        self.update(edit_id, new_message, **kwargs)
 
     def delete(self, delete_id: str, user_name=None, user_id=None):
         """
@@ -437,6 +472,7 @@ class ClusterBot(object):
         channel = self.conversations[user_id]["channel"]["id"]
         _ = self.client.chat_delete(channel=channel, ts=delete_id,)
         logger.info(f"Deleted message to '{user_name}' (ID: '{user_id}')")
+        del self.stored_messages[delete_id]
 
     def init_pbar(self, max_value: int, width=80, ts=None, **kwargs):
         """
